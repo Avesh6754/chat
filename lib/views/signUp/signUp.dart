@@ -1,13 +1,12 @@
 import 'package:chat_application/controller/auth_controller.dart';
 import 'package:chat_application/service/auth_service.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 var controller = Get.put(AuthController());
 
-class SignIn extends StatelessWidget {
-  const SignIn({super.key});
+class SignUp extends StatelessWidget {
+  const SignUp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +20,7 @@ class SignIn extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 const Text(
-                  'Sign In',
+                  'Sign Up',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                       fontSize: 32,
@@ -54,34 +53,26 @@ class SignIn extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 10),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: TextButton(
-                    onPressed: () {},
-                    child: const Text(
-                      'Forgot Password?',
-                      style: TextStyle(
-                          color: Colors.blue,
-                          fontSize: 15,
-                          decoration: TextDecoration.underline,
-                          decorationColor: Colors.blue),
-                    ),
-                  ),
-                ),
+                // Align(
+                //   alignment: Alignment.centerRight,
+                //   child: TextButton(
+                //     onPressed: () {},
+                //     child: const Text(
+                //       'Forgot Password?',
+                //       style: TextStyle(
+                //           color: Colors.blue,
+                //           fontSize: 15,
+                //           decoration: TextDecoration.underline,
+                //           decorationColor: Colors.blue),
+                //     ),
+                //   ),
+                // ),
                 const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () async {
-                    await AuthService.authService.sigInWithEmailAndPassword(
+                    await AuthService.authService.createAccountWithEmailAndPassword(
                         controller.txtEmail.text, controller.txtPassword.text);
-                    User? user =AuthService.authService.getUser();
-                    if(user!=null)
-                      {
-                        Get.offAndToNamed('/home');
-                      }
-                    else
-                      {
-                        Get.snackbar('Sign In Fail !','Email and Password Wrong ');
-                      }
+                    Get.offAndToNamed('/home');
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green,
@@ -91,7 +82,7 @@ class SignIn extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(vertical: 15),
                   ),
                   child: const Text(
-                    'Sign In',
+                    'Sign Up',
                     style: TextStyle(
                         fontSize: 16, color: Colors.white, letterSpacing: 1),
                   ),
@@ -115,7 +106,7 @@ class SignIn extends StatelessWidget {
                     height: 25,
                     width: 25,
                   ),
-                  label: const Text('Sign In with Google',
+                  label: const Text('Sign Up with Google',
                       style: TextStyle(
                         letterSpacing: 0.5,
                       )),
@@ -132,10 +123,10 @@ class SignIn extends StatelessWidget {
                 const SizedBox(height: 20),
                 TextButton(
                     onPressed: () {
-                      Get.toNamed('/signUp');
+                      Get.back();
                     },
                     child: Text(
-                      '''Don't have account ? Sign Up''',
+                      '''Already have account ? Sign In''',
                       style: TextStyle(
                         letterSpacing: 0.5,
                       ),
