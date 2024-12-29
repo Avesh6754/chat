@@ -53,26 +53,14 @@ class SignUp extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 10),
-                // Align(
-                //   alignment: Alignment.centerRight,
-                //   child: TextButton(
-                //     onPressed: () {},
-                //     child: const Text(
-                //       'Forgot Password?',
-                //       style: TextStyle(
-                //           color: Colors.blue,
-                //           fontSize: 15,
-                //           decoration: TextDecoration.underline,
-                //           decorationColor: Colors.blue),
-                //     ),
-                //   ),
-                // ),
                 const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () async {
                     await AuthService.authService.createAccountWithEmailAndPassword(
                         controller.txtEmail.text, controller.txtPassword.text);
-                    Get.offAndToNamed('/home');
+                    controller.txtPassword.clear();
+                    controller.txtEmail.clear();
+                   Get.back();
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green,

@@ -1,5 +1,6 @@
 import 'package:chat_application/firebase_options.dart';
 import 'package:chat_application/service/auth_service.dart';
+import 'package:chat_application/views/component/auth_Manager.dart';
 import 'package:chat_application/views/home/home_Page.dart';
 import 'package:chat_application/views/signIn/sign_In.dart';
 import 'package:chat_application/views/signUp/signUp.dart';
@@ -24,7 +25,8 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       getPages: [
-        GetPage(name: '/', page: () => (AuthService.authService.getUser()==null)?SignIn():HomePage(),),
+        GetPage(name: '/', page: () => AuthManager(),),
+        GetPage(name: '/signIn', page: () => SignIn(),),
         GetPage(name: '/signUp', page: () => SignUp(),),
         GetPage(name: '/home', page: () => HomePage(),),
       ],

@@ -1,8 +1,10 @@
 import 'package:chat_application/controller/auth_controller.dart';
 import 'package:chat_application/service/auth_service.dart';
+import 'package:chat_application/service/google_auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sign_in_button/sign_in_button.dart';
 
 var controller = Get.put(AuthController());
 
@@ -71,17 +73,15 @@ class SignIn extends StatelessWidget {
                 const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () async {
-                    await AuthService.authService.sigInWithEmailAndPassword(
-                        controller.txtEmail.text, controller.txtPassword.text);
-                    User? user =AuthService.authService.getUser();
-                    if(user!=null)
-                      {
-                        Get.offAndToNamed('/home');
-                      }
-                    else
-                      {
-                        Get.snackbar('Sign In Fail !','Email and Password Wrong ');
-                      }
+                    String respnse = await AuthService.authService
+                        .sigInWithEmailAndPassword(controller.txtEmail.text,
+                            controller.txtPassword.text);
+                    User? user = AuthService.authService.getUser();
+                    if (user != null && respnse == "Success") {
+                      Get.offAndToNamed('/home');
+                    } else {
+                      Get.snackbar('Sign In Fail !', respnse);
+                    }
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green,
@@ -108,27 +108,13 @@ class SignIn extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 20),
-                ElevatedButton.icon(
-                  onPressed: () {},
-                  icon: Image.asset(
-                    'assets/image/google.png',
-                    height: 25,
-                    width: 25,
-                  ),
-                  label: const Text('Sign In with Google',
-                      style: TextStyle(
-                        letterSpacing: 0.5,
-                      )),
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.black,
-                    backgroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
-                      side: const BorderSide(color: Colors.grey),
-                    ),
-                    padding: const EdgeInsets.symmetric(vertical: 15),
-                  ),
-                ),
+                SignInButton(Buttons.google, onPressed: () async {
+                  await GoogleAuth.googleAuth.signInWithGoogle();
+                  User? user = AuthService.authService.getUser();
+                  if (user != null ) {
+                    Get.offAndToNamed('/home');
+                  }
+                }),
                 const SizedBox(height: 20),
                 TextButton(
                     onPressed: () {

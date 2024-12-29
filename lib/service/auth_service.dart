@@ -14,9 +14,15 @@ class AuthService{
     await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
   }
 
-  Future<void> sigInWithEmailAndPassword(String email,String password)
+  Future<String> sigInWithEmailAndPassword(String email,String password)
   async {
-    await _firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
+    try{
+      await _firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
+      return "Success";
+    }catch(e)
+    {
+      return e.toString();
+    }
   }
 
   Future<void> logoutUser()
