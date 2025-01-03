@@ -3,6 +3,8 @@ import 'package:chat_application/service/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../component/sign_Up_button.dart';
+
 var controller = Get.put(AuthController());
 
 class SignUp extends StatelessWidget {
@@ -40,41 +42,30 @@ class SignUp extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 20),
-                TextField(
-                  controller: controller.txtPassword,
-                  obscureText: true,
-                  decoration: InputDecoration(
-                    labelText: 'Password',
-                    hintText: 'Enter your password',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30),
+                Obx(
+                  () => TextField(
+                    controller: controller.txtPassword,
+                    obscureText: controller.isHidden.value,
+                    decoration: InputDecoration(
+                      labelText: 'Password',
+                      hintText: 'Enter your password',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      suffixIcon: IconButton(
+                          onPressed: () {
+                            controller
+                                .hideThePassword(controller.isHidden.value);
+                          },
+                          icon: (controller.isHidden.value == false)
+                              ? Icon(Icons.visibility)
+                              : Icon(Icons.visibility_off)),
                     ),
-                    suffixIcon: Icon(Icons.visibility_off),
                   ),
                 ),
                 const SizedBox(height: 10),
                 const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () async {
-                    await AuthService.authService.createAccountWithEmailAndPassword(
-                        controller.txtEmail.text, controller.txtPassword.text);
-                    controller.txtPassword.clear();
-                    controller.txtEmail.clear();
-                   Get.back();
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    padding: const EdgeInsets.symmetric(vertical: 15),
-                  ),
-                  child: const Text(
-                    'Sign Up',
-                    style: TextStyle(
-                        fontSize: 16, color: Colors.white, letterSpacing: 1),
-                  ),
-                ),
+                Sign_Up_Button(),
                 const SizedBox(height: 20),
                 const Row(
                   children: [
@@ -113,7 +104,7 @@ class SignUp extends StatelessWidget {
                     onPressed: () {
                       Get.back();
                     },
-                    child: Text(
+                    child: const Text(
                       '''Already have account ? Sign In''',
                       style: TextStyle(
                         letterSpacing: 0.5,

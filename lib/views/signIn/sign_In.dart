@@ -43,16 +43,21 @@ class SignIn extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 20),
-                TextField(
-                  controller: controller.txtPassword,
-                  obscureText: true,
-                  decoration: InputDecoration(
-                    labelText: 'Password',
-                    hintText: 'Enter your password',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30),
+                Obx(
+                  () => TextField(
+                    controller: controller.txtPassword,
+                    obscureText: controller.isHidden.value,
+                    decoration: InputDecoration(
+                      labelText: 'Password',
+                      hintText: 'Enter your password',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      suffixIcon: IconButton(
+                          onPressed: () {
+                            controller.hideThePassword(controller.isHidden.value);
+                          }, icon:(controller.isHidden.value==false)? Icon(Icons.visibility):Icon(Icons.visibility_off)),
                     ),
-                    suffixIcon: Icon(Icons.visibility_off),
                   ),
                 ),
                 const SizedBox(height: 10),
@@ -108,13 +113,42 @@ class SignIn extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 20),
-                SignInButton(Buttons.google, onPressed: () async {
-                  await GoogleAuth.googleAuth.signInWithGoogle();
-                  User? user = AuthService.authService.getUser();
-                  if (user != null ) {
-                    Get.offAndToNamed('/home');
-                  }
-                }),
+                ElevatedButton(
+                  onPressed: () async {
+                    await GoogleAuth.googleAuth.signInWithGoogle();
+                    User? user = AuthService.authService.getUser();
+                    if (user != null) {
+                      Get.offAndToNamed('/home');
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    padding: const EdgeInsets.symmetric(vertical: 15),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        'assets/image/google.png',
+                        height: 25,
+                        width: 25,
+                      ),
+                      const SizedBox(
+                        width: 20,
+                      ),
+                      const Text(
+                        'Sign In With Google',
+                        style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.black,
+                            letterSpacing: 1),
+                      ),
+                    ],
+                  ),
+                ),
                 const SizedBox(height: 20),
                 TextButton(
                     onPressed: () {

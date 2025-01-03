@@ -1,5 +1,6 @@
 import 'package:chat_application/service/auth_service.dart';
 import 'package:chat_application/service/google_auth.dart';
+import 'package:chat_application/views/signIn/sign_In.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -9,7 +10,17 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<Map<String, String>> users = [
+    final List users = [
+      {'name': 'Alice', 'lastMessage': 'Hey there!'},
+      {'name': 'Bob', 'lastMessage': 'What'},
+      {'name': 'Charlie', 'lastMessage': 'See you soon.'},
+      {'name': 'Diana', 'lastMessage': 'Can we meet tomorrow?'},
+      {'name': 'Eve', 'lastMessage': 'Let'},
+      {'name': 'Alice', 'lastMessage': 'Hey there!'},
+      {'name': 'Bob', 'lastMessage': 'What'},
+      {'name': 'Charlie', 'lastMessage': 'See you soon.'},
+      {'name': 'Diana', 'lastMessage': 'Can we meet tomorrow?'},
+      {'name': 'Eve', 'lastMessage': 'Let'},
       {'name': 'Alice', 'lastMessage': 'Hey there!'},
       {'name': 'Bob', 'lastMessage': 'What'},
       {'name': 'Charlie', 'lastMessage': 'See you soon.'},
@@ -24,9 +35,10 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Home Screen',
+          'Chat App',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
+    
         actions: [
           IconButton(
               onPressed: () async {
@@ -34,7 +46,10 @@ class HomePage extends StatelessWidget {
                 await GoogleAuth.googleAuth.signOutFromGoogle();
                 User? user = AuthService.authService.getUser();
                 if (user == null) {
+                  controller.txtEmail.clear();
+                  controller.txtPassword.clear();
                   Get.offAndToNamed('/signIn');
+
                 }
               },
               icon: Icon(Icons.logout))
@@ -45,6 +60,7 @@ class HomePage extends StatelessWidget {
         itemBuilder: (context, index) {
           final user = users[index];
           return ListTile(
+
             leading: CircleAvatar(
               child: Text(user['name']![0]), // First letter of the name
               backgroundColor: Colors.blueGrey,
