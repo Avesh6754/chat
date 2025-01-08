@@ -33,12 +33,43 @@ class HomePage extends StatelessWidget {
       {'name': 'Eve', 'lastMessage': 'Let'},
     ];
     return Scaffold(
+      drawer: Drawer(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              DrawerHeader(
+                  child: CircleAvatar(
+                radius: 50,
+                    backgroundImage:AuthService.user!.photoURL==null?NetworkImage('https://cdn-icons-png.flaticon.com/512/3135/3135715.png'): NetworkImage(AuthService.user!.photoURL!),
+              )),
+              Row(
+
+                children: [
+                  Icon(Icons.email),
+                  SizedBox(width: 20,),
+                  Text(AuthService.user!.email!,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16),)
+                ],
+              ),
+              SizedBox(height: 20,),
+              Row(
+
+                children: [
+                  Icon(Icons.drive_file_rename_outline),
+                  SizedBox(width: 20,),
+                 Text(AuthService.user!.displayName!,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16),)
+                ],
+              ),
+
+            ],
+          ),
+        ),
+      ),
       appBar: AppBar(
         title: Text(
           'Chat App',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-    
         actions: [
           IconButton(
               onPressed: () async {
@@ -49,7 +80,6 @@ class HomePage extends StatelessWidget {
                   controller.txtEmail.clear();
                   controller.txtPassword.clear();
                   Get.offAndToNamed('/signIn');
-
                 }
               },
               icon: Icon(Icons.logout))
@@ -60,7 +90,6 @@ class HomePage extends StatelessWidget {
         itemBuilder: (context, index) {
           final user = users[index];
           return ListTile(
-
             leading: CircleAvatar(
               child: Text(user['name']![0]), // First letter of the name
               backgroundColor: Colors.blueGrey,

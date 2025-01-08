@@ -1,6 +1,7 @@
 import 'package:chat_application/controller/auth_controller.dart';
 import 'package:chat_application/service/auth_service.dart';
 import 'package:chat_application/service/google_auth.dart';
+import 'package:chat_application/service/user_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -116,7 +117,9 @@ class SignIn extends StatelessWidget {
                 ElevatedButton(
                   onPressed: () async {
                     await GoogleAuth.googleAuth.signInWithGoogle();
+
                     User? user = AuthService.authService.getUser();
+
                     if (user != null) {
                       Get.offAndToNamed('/home');
                     }

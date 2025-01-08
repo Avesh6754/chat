@@ -6,6 +6,7 @@ class AuthService{
 
   AuthService._();
   static AuthService authService=AuthService._();
+  static User? user;
 
   final FirebaseAuth _firebaseAuth=FirebaseAuth.instance;
 
@@ -32,10 +33,10 @@ class AuthService{
 
   User? getUser()
   {
-    User? user = _firebaseAuth.currentUser;
+    user = _firebaseAuth.currentUser;
     if(user!=null)
       {
-        log('Login ${user.email}');
+        log('Login ${user!.email}');
       }
     return user;
   }
