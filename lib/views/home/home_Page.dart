@@ -57,7 +57,6 @@ class HomePage extends StatelessWidget {
                 children: [
                   Icon(Icons.drive_file_rename_outline),
                   SizedBox(width: 20,),
-                 Text(AuthService.user!.displayName!,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16),)
                 ],
               ),
 

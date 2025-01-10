@@ -32,6 +32,28 @@ class SignUp extends StatelessWidget {
                 ),
                 const SizedBox(height: 20),
                 TextField(
+                  controller: controller.txtName,
+                  decoration: InputDecoration(
+                    labelText: 'Name',
+                    hintText: 'Enter your Name',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                TextField(
+                  controller: controller.txtPhone,
+                  decoration: InputDecoration(
+                    labelText: 'Phone',
+                    hintText: 'Enter your Phone',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                TextField(
                   controller: controller.txtEmail,
                   decoration: InputDecoration(
                     labelText: 'E-mail',

@@ -6,6 +6,8 @@ class AuthController extends GetxController{
 
   var txtEmail=TextEditingController();
   var txtPassword=TextEditingController();
+  var txtName=TextEditingController();
+  var txtPhone=TextEditingController();
 
   RxBool isHidden=true.obs;
 

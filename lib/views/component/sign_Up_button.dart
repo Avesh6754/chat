@@ -1,10 +1,9 @@
-
+import 'package:chat_application/service/user_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../service/auth_service.dart';
 import '../signIn/sign_In.dart';
-
 
 class Sign_Up_Button extends StatelessWidget {
   const Sign_Up_Button({
@@ -15,11 +14,21 @@ class Sign_Up_Button extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: () async {
-        await AuthService.authService.createAccountWithEmailAndPassword(
-            controller.txtEmail.text, controller.txtPassword.text);
-        controller.txtPassword.clear();
-        controller.txtEmail.clear();
-        Get.back();
+        String response = await AuthService.authService
+            .createAccountWithEmailAndPassword(
+                controller.txtEmail.text, controller.txtPassword.text);
+        if (response == 'Successfully') {
+         await UserFirestore.userFirestore.addUser(
+            email: AuthService.authService.getUser()!.email!,
+            phone: controller.txtPhone.text,
+            name: controller.txtName.text,
+          );
+          controller.txtPassword.clear();
+          controller.txtEmail.clear();
+          controller.txtPhone.clear();
+          controller.txtName.clear();
+          Get.back();
+        }
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: Colors.green,
@@ -30,8 +39,7 @@ class Sign_Up_Button extends StatelessWidget {
       ),
       child: const Text(
         'Sign Up',
-        style: TextStyle(
-            fontSize: 16, color: Colors.white, letterSpacing: 1),
+        style: TextStyle(fontSize: 16, color: Colors.white, letterSpacing: 1),
       ),
     );
   }
