@@ -1,3 +1,4 @@
+import 'package:chat_application/modal/userModal.dart';
 import 'package:chat_application/service/user_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -17,12 +18,13 @@ class Sign_Up_Button extends StatelessWidget {
         String response = await AuthService.authService
             .createAccountWithEmailAndPassword(
                 controller.txtEmail.text, controller.txtPassword.text);
-        if (response == 'Successfully') {
-         await UserFirestore.userFirestore.addUser(
-            email: AuthService.authService.getUser()!.email!,
+        UserModal userModal = UserModal(
+            email: controller.txtEmail.text,
             phone: controller.txtPhone.text,
-            name: controller.txtName.text,
-          );
+            name: controller.txtName.text);
+        if (response == 'Successfully') {
+
+          await UserFirestore.userFirestore.addUser(userModal);
           controller.txtPassword.clear();
           controller.txtEmail.clear();
           controller.txtPhone.clear();
