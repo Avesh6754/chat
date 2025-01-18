@@ -1,5 +1,6 @@
 import 'package:chat_application/service/auth_service.dart';
 import 'package:chat_application/service/google_auth.dart';
+import 'package:chat_application/service/user_firestore.dart';
 import 'package:chat_application/views/signIn/sign_In.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -34,35 +35,47 @@ class HomePage extends StatelessWidget {
     ];
     return Scaffold(
       drawer: Drawer(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: [
-              DrawerHeader(
-                  child: CircleAvatar(
-                radius: 50,
-                    backgroundImage:AuthService.user!.photoURL==null?NetworkImage('https://cdn-icons-png.flaticon.com/512/3135/3135715.png'): NetworkImage(AuthService.user!.photoURL!),
-              )),
-              Row(
-
+        child: FutureBuilder(future: UserFirestore.userFirestore.getCurrentUserAndShow(), builder: (context, snapshot) {
+          if(snapshot.hasError)
+            {
+              return Center(child:Text(snapshot.error.toString()),);
+            }
+          if (snapshot.connectionState == ConnectionState.done) {
+            Map<String, dynamic> data = snapshot.data!.data() as Map<String, dynamic>;
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
                 children: [
-                  Icon(Icons.email),
-                  SizedBox(width: 20,),
-                  Text(AuthService.user!.email!,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16),)
+                  DrawerHeader(
+                      child: CircleAvatar(
+                        radius: 50,
+                        backgroundImage:AuthService.user!.photoURL==null?NetworkImage('https://cdn-icons-png.flaticon.com/512/3135/3135715.png'): NetworkImage(AuthService.user!.photoURL!),
+                      )),
+                  Row(
+
+                    children: [
+                      Icon(Icons.email),
+                      SizedBox(width: 20,),
+                      Text(AuthService.user!.email!,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16),)
+                    ],
+                  ),
+                  SizedBox(height: 20,),
+                  Row(
+
+                    children: [
+                      Icon(Icons.drive_file_rename_outline),
+                      SizedBox(width: 20,),
+                    ],
+                  ),
+
                 ],
               ),
-              SizedBox(height: 20,),
-              Row(
+            );
+          }
+          return Center(child: CircularProgressIndicator(),);
 
-                children: [
-                  Icon(Icons.drive_file_rename_outline),
-                  SizedBox(width: 20,),
-                ],
-              ),
+        },),
 
-            ],
-          ),
-        ),
       ),
       appBar: AppBar(
         title: Text(

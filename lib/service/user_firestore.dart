@@ -14,4 +14,10 @@ class UserFirestore {
     await _firestore.collection("users").doc(user.email).set(
         { 'email': user.email,'name':user.name,'phone':user.phone});
   }
+
+  Future<DocumentSnapshot<Map<String, dynamic>>> getCurrentUserAndShow()
+  async {
+    User? user=await AuthService.authService.getUser();
+    return await _firestore.collection("users").doc(user!.email).get();
+  }
 }

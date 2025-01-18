@@ -8,6 +8,8 @@ class AuthController extends GetxController{
   var txtPassword=TextEditingController();
   var txtName=TextEditingController();
   var txtPhone=TextEditingController();
+  RxString sender="".obs;
+  RxString recevier="".obs;
 
   RxBool isHidden=true.obs;
 
@@ -15,4 +17,5 @@ class AuthController extends GetxController{
   {
     isHidden.value=!value;
   }
+
 }
