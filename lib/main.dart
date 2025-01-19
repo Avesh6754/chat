@@ -1,6 +1,7 @@
 import 'package:chat_application/firebase_options.dart';
 import 'package:chat_application/service/auth_service.dart';
 import 'package:chat_application/views/component/auth_Manager.dart';
+import 'package:chat_application/views/home/chat_page.dart';
 import 'package:chat_application/views/home/home_Page.dart';
 import 'package:chat_application/views/signIn/sign_In.dart';
 import 'package:chat_application/views/signUp/signUp.dart';
@@ -29,6 +30,7 @@ class MyApp extends StatelessWidget {
         GetPage(name: '/signIn', page: () => SignIn(),),
         GetPage(name: '/signUp', page: () => SignUp(),),
         GetPage(name: '/home', page: () => HomePage(),),
+        GetPage(name: '/chat', page: () => ChatPage(),),
       ],
     );
 
