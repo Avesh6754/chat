@@ -26,11 +26,11 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       getPages: [
-        GetPage(name: '/', page: () => AuthManager(),),
-        GetPage(name: '/signIn', page: () => SignIn(),),
-        GetPage(name: '/signUp', page: () => SignUp(),),
-        GetPage(name: '/home', page: () => HomePage(),),
-        GetPage(name: '/chat', page: () => ChatPage(),),
+        GetPage(name: '/', page: () => const AuthManager(),),
+        GetPage(name: '/signIn', page: () => const SignIn(),),
+        GetPage(name: '/signUp', page: () => const SignUp(),),
+        GetPage(name: '/home', page: () => const HomePage(),),
+        GetPage(name: '/chat', page: () => const ChatPage(),),
       ],
     );
 

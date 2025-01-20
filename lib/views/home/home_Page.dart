@@ -1,3 +1,4 @@
+import 'package:chat_application/controller/auth_controller.dart';
 import 'package:chat_application/controller/chat_Controller.dart';
 import 'package:chat_application/modal/userModal.dart';
 import 'package:chat_application/service/auth_service.dart';
@@ -7,13 +8,15 @@ import 'package:chat_application/views/signIn/sign_In.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-var chatController=Get.put(ChatController());
+
+var chatController = Get.put(ChatController());
+var authController = Get.put(AuthController());
+
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       drawer: Drawer(
         child: FutureBuilder(
@@ -25,8 +28,8 @@ class HomePage extends StatelessWidget {
               );
             }
             if (snapshot.connectionState == ConnectionState.done) {
-              Map<String, dynamic> data =
-                  snapshot.data!.data() as Map<String, dynamic>;
+              Map? data = snapshot.data!.data();
+              UserModal userModal = UserModal.fromMap(data!);
               return Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
@@ -35,46 +38,67 @@ class HomePage extends StatelessWidget {
                         child: CircleAvatar(
                       radius: 50,
                       backgroundImage: AuthService.user!.photoURL == null
-                          ? NetworkImage(
+                          ? const NetworkImage(
                               'https://cdn-icons-png.flaticon.com/512/3135/3135715.png')
                           : NetworkImage(AuthService.user!.photoURL!),
                     )),
                     Row(
                       children: [
-                        Icon(Icons.email),
-                        SizedBox(
+                        const Icon(Icons.email),
+                        const SizedBox(
                           width: 20,
                         ),
                         Text(
-                          AuthService.user!.email!,
-                          style: TextStyle(
+                          userModal.email!,
+                          style: const TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 16),
                         )
                       ],
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                     Row(
                       children: [
-                        Icon(Icons.drive_file_rename_outline),
-                        SizedBox(
+                        const Icon(Icons.person),
+                        const SizedBox(
                           width: 20,
                         ),
+                        Text(
+                          userModal.name!,
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 16),
+                        )
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Row(
+                      children: [
+                        const Icon(Icons.phone),
+                        const SizedBox(
+                          width: 20,
+                        ),
+                        Text(
+                          userModal.phone!,
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 16),
+                        )
                       ],
                     ),
                   ],
                 ),
               );
             }
-            return Center(
+            return const Center(
               child: CircularProgressIndicator(),
             );
           },
         ),
       ),
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'Chat App',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
@@ -116,7 +140,11 @@ class HomePage extends StatelessWidget {
             itemBuilder: (context, index) {
               return ListTile(
                 leading: CircleAvatar(
-                  child: Text(userList[index].name!.characters.characterAt(0).toString()), // First letter of the name
+                  child: Text(userList[index]
+                      .name!
+                      .characters
+                      .characterAt(0)
+                      .toString()), // First letter of the name
                   backgroundColor: Colors.blueGrey,
                 ),
                 title: Text(userList[index].name!.toString()),
@@ -124,18 +152,9 @@ class HomePage extends StatelessWidget {
                 trailing: const Icon(Icons.chat_bubble_outline),
                 onTap: () {
                   // Action on tap
-                  chatController.getReceiver(userList[index].email!, userList[index].name!);
+                  chatController.getReceiver(
+                      userList[index].email!, userList[index].name!);
                   Get.toNamed('/chat');
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Tapped on ${userList[index].name}'),
-                      duration: Duration(seconds: 2),
-                      action: SnackBarAction(
-                        label: 'Undo',
-                        onPressed: () {},
-                      ),
-                    ),
-                  );
                 },
               );
             },

@@ -13,7 +13,7 @@ class ChatPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(chatController.receiverName.value),
+        title: Text(chatController.receiverEmail.value),
       ),
       body: Padding(
         padding: const EdgeInsets.all(12),
@@ -30,7 +30,7 @@ class ChatPage extends StatelessWidget {
                   );
                 }
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(
+                  return const Center(
                     child: CircularProgressIndicator(),
                   );
                 }
@@ -40,21 +40,34 @@ class ChatPage extends StatelessWidget {
                   chatList.add(ChatModal.fromMap(snap.data() as Map));
                 }
                 return Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    ...List.generate(chatList.length,(index)=>Container(
-                      alignment: chatList[index].sender ==
-                          AuthService.authService.getUser()!.email
-                          ? Alignment.centerRight
-                          : Alignment.centerLeft,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 2, horizontal: 8),
-                        child: ListTile(
-                          title: Text(chatList[index].message!),
-                          subtitle: Text(chatList[index].time!.toString()),
+                    ...List.generate(chatList.length,(index)=>Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        alignment: chatList[index].sender ==
+                            AuthService.authService.getUser()!.email
+                            ? Alignment.centerRight
+                            : Alignment.centerLeft,
+                        child: Container(
+                          // color: Colors.green.shade100,
+                          decoration: BoxDecoration(
+                              color:chatList[index].sender ==
+                                  AuthService.authService.getUser()!.email
+                                  ? Colors.green.shade100
+                                  :  Colors.grey.shade300,
+                            borderRadius: BorderRadius.circular(10)
+                          ),
+                          child: Padding(
+
+                            padding: const EdgeInsets.symmetric(vertical: 8,horizontal: 20),
+                            child: Text(chatList[index].message!),
+                          ),
+                            // subtitle: Text(chatList[index].time!.toString()),
+                          ),
                         ),
-                      ),
-                    ),)
+                    ),
+                    ),
                   ],
                 );
               },
@@ -62,7 +75,9 @@ class ChatPage extends StatelessWidget {
             TextField(
               controller: chatController.txtChat,
               decoration: InputDecoration(
-                  border: OutlineInputBorder(),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(25)
+                  ),
                   suffixIcon: IconButton(
                       onPressed: () async {
                         ChatModal chat = ChatModal(
@@ -70,6 +85,7 @@ class ChatPage extends StatelessWidget {
                             recevier: chatController.receiverEmail.value,
                             sender: AuthService.authService.getUser()!.email,
                             time: Timestamp.now());
+                        chatController.txtChat.clear();
                         await UserFirestore.userFirestore
                             .addChatIntoFirestore(chat);
                       },
