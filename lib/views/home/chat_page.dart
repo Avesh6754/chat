@@ -36,37 +36,92 @@ class ChatPage extends StatelessWidget {
                 }
                 List data = snapshot.data!.docs;
                 List<ChatModal> chatList = [];
+                List<String> docIdList = [];
                 for (QueryDocumentSnapshot snap in data) {
+                  docIdList.add(snap.id);
                   chatList.add(ChatModal.fromMap(snap.data() as Map));
                 }
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    ...List.generate(chatList.length,(index)=>Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                        alignment: chatList[index].sender ==
-                            AuthService.authService.getUser()!.email
-                            ? Alignment.centerRight
-                            : Alignment.centerLeft,
-                        child: Container(
-                          // color: Colors.green.shade100,
-                          decoration: BoxDecoration(
-                              color:chatList[index].sender ==
-                                  AuthService.authService.getUser()!.email
-                                  ? Colors.green.shade100
-                                  :  Colors.grey.shade300,
-                            borderRadius: BorderRadius.circular(10)
-                          ),
-                          child: Padding(
-
-                            padding: const EdgeInsets.symmetric(vertical: 8,horizontal: 20),
-                            child: Text(chatList[index].message!),
-                          ),
-                            // subtitle: Text(chatList[index].time!.toString()),
+                    ...List.generate(
+                      chatList.length,
+                      (index) => GestureDetector(
+                        onLongPress: () {
+                          if (chatList[index].sender !=
+                              AuthService.authService.getUser()!.email) {
+                            chatController.txtUpdateChat =
+                                TextEditingController(
+                                    text: chatList[index].message);
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  title: const Text('Update'),
+                                  content: TextField(
+                                    controller: chatController.txtUpdateChat,
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                        onPressed: () {
+                                          String updateId = docIdList[index];
+                                          UserFirestore.userFirestore
+                                              .updateMessage(
+                                                  recevier:
+                                                      chatController
+                                                          .receiverEmail.value,
+                                                  message: chatController
+                                                      .txtUpdateChat.text,
+                                                  updateId: updateId);
+                                          Get.back();
+                                        },
+                                        child: const Text('Update')),
+                                    TextButton(
+                                        onPressed: () {
+                                          Get.back();
+                                        },
+                                        child: Text('Cancel'))
+                                  ],
+                                );
+                              },
+                            );
+                          }
+                        },
+                        onDoubleTap: () {
+                          if (chatList[index].sender ==
+                              AuthService.authService.getUser()!.email) {
+                            UserFirestore.userFirestore.deleteMessage(
+                                recevier: chatController.receiverEmail.value,
+                                removeId: docIdList[index]);
+                          }
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Container(
+                            alignment: chatList[index].sender ==
+                                    AuthService.authService.getUser()!.email
+                                ? Alignment.centerRight
+                                : Alignment.centerLeft,
+                            child: Container(
+                              // color: Colors.green.shade100,
+                              decoration: BoxDecoration(
+                                  color: chatList[index].sender ==
+                                          AuthService.authService
+                                              .getUser()!
+                                              .email
+                                      ? Colors.green.shade100
+                                      : Colors.grey.shade300,
+                                  borderRadius: BorderRadius.circular(10)),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 8, horizontal: 20),
+                                child: Text(chatList[index].message!),
+                              ),
+                              // subtitle: Text(chatList[index].time!.toString()),
+                            ),
                           ),
                         ),
-                    ),
+                      ),
                     ),
                   ],
                 );
@@ -76,8 +131,7 @@ class ChatPage extends StatelessWidget {
               controller: chatController.txtChat,
               decoration: InputDecoration(
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(25)
-                  ),
+                      borderRadius: BorderRadius.circular(25)),
                   suffixIcon: IconButton(
                       onPressed: () async {
                         ChatModal chat = ChatModal(

@@ -3,6 +3,7 @@ import 'package:chat_application/modal/userModal.dart';
 import 'package:chat_application/service/auth_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:get/get.dart';
 
 class UserFirestore {
   UserFirestore._();
@@ -47,4 +48,21 @@ Stream<QuerySnapshot<Map<String, dynamic>>> readChatFromFirestore(String recevie
   return  _firestore.collection("chatroom").doc(docId).collection("chat").orderBy("time",descending: false).snapshots();
   
 }
+
+Future<void> updateMessage({required String recevier,required String message,required String updateId})
+async {
+  String sender =AuthService.authService.getUser()!.email!;
+  List doc=[sender,recevier];
+  doc.sort();
+  String docId=doc.join("_");
+  await _firestore.collection("chatroom").doc(docId).collection("chat").doc(updateId).update({'message':message});
+}
+  Future<void> deleteMessage({required String recevier,required String removeId})
+  async {
+    String sender =AuthService.authService.getUser()!.email!;
+    List doc=[sender,recevier];
+    doc.sort();
+    String docId=doc.join("_");
+    await _firestore.collection("chatroom").doc(docId).collection("chat").doc(removeId).delete().then((value) =>Get.snackbar('Message Deleted !',''));
+  }
 }
