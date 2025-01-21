@@ -18,6 +18,7 @@ class ChatPage extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(12),
         child: Column(
+
           children: [
             Expanded(
                 child: StreamBuilder(
