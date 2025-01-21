@@ -144,7 +144,8 @@ class ChatPage extends StatelessWidget {
                             .addChatIntoFirestore(chat);
                       },
                       icon: Icon(Icons.send))),
-            )
+            ),
+            SizedBox(height: 30,)
           ],
         ),
       ),
