@@ -48,7 +48,7 @@ class ChatPage extends StatelessWidget {
                       chatList.length,
                       (index) => GestureDetector(
                         onLongPress: () {
-                          if (chatList[index].sender !=
+                          if (chatList[index].sender ==
                               AuthService.authService.getUser()!.email) {
                             chatController.txtUpdateChat =
                                 TextEditingController(
