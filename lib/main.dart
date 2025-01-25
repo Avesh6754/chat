@@ -1,5 +1,6 @@
 import 'package:chat_application/firebase_options.dart';
 import 'package:chat_application/service/auth_service.dart';
+import 'package:chat_application/service/local_notification.dart';
 import 'package:chat_application/views/component/auth_Manager.dart';
 import 'package:chat_application/views/home/chat_page.dart';
 import 'package:chat_application/views/home/home_Page.dart';
@@ -13,6 +14,10 @@ Future<void> main()
 async {
 WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options:DefaultFirebaseOptions.currentPlatform);
+WidgetsFlutterBinding.ensureInitialized();
+
+
+
   runApp(MyApp());
 
 
