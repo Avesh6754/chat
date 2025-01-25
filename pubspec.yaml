@@ -44,6 +44,7 @@ dependencies:
   cloud_firestore: ^5.6.1
   flutter_local_notifications: any
   permission_handler: any
+  intl: ^0.20.2
 
 
 dev_dependencies:

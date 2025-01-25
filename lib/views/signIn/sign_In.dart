@@ -1,4 +1,5 @@
 import 'package:chat_application/controller/auth_controller.dart';
+import 'package:chat_application/modal/userModal.dart';
 import 'package:chat_application/service/auth_service.dart';
 import 'package:chat_application/service/google_auth.dart';
 import 'package:chat_application/service/user_firestore.dart';
@@ -82,6 +83,7 @@ class SignIn extends StatelessWidget {
                     String respnse = await AuthService.authService
                         .sigInWithEmailAndPassword(controller.txtEmail.text,
                             controller.txtPassword.text);
+
                     User? user = AuthService.authService.getUser();
                     if (user != null && respnse == "Success") {
                       Get.offAndToNamed('/home');

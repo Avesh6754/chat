@@ -93,13 +93,22 @@ class HomePage extends StatelessWidget {
                     itemCount: userList.length,
                     itemBuilder: (context, index) {
                       return ListTile(
-                        leading: CircleAvatar(
-                          backgroundColor: Colors.blueGrey,
-                          child: Text(userList[index]
-                              .name!
-                              .characters.toUpperCase()
-                              .characterAt(0)
-                              .toString()),
+                        leading: Container(
+                          decoration: BoxDecoration(
+                            color:Colors.green,
+                            shape: BoxShape.circle
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(3),
+                            child: CircleAvatar(
+                              backgroundColor: Colors.blueGrey,
+                              child: Text(userList[index]
+                                  .name!
+                                  .characters.toUpperCase()
+                                  .characterAt(0)
+                                  .toString()),
+                            ),
+                          ),
                         ),
                         title: Text(userList[index].name!.toString()),
                         subtitle: Text(userList[index].email!.toString()),

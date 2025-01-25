@@ -48,6 +48,7 @@ class ChatPage extends StatelessWidget {
                         chatList.length,
                         (index) => GestureDetector(
                           onLongPress: () {
+
                             if (chatList[index].sender ==
                                 AuthService.authService.getUser()!.email) {
                               chatController.txtUpdateChat =
@@ -115,7 +116,12 @@ class ChatPage extends StatelessWidget {
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(
                                       vertical: 8, horizontal: 20),
-                                  child: Text(chatList[index].message!),
+                                  child: Column(
+                                    children: [
+                                      Text(chatList[index].message!,style: TextStyle(fontSize: 15),),
+                                      Text(chatController.dateFormate(chatList[index].time!),style: TextStyle(fontSize: 10,color: Colors.grey.shade700),),
+                                    ],
+                                  ),
                                 ),
                                 // subtitle: Text(chatList[index].time!.toString()),
                               ),
@@ -139,7 +145,9 @@ class ChatPage extends StatelessWidget {
                             message: chatController.txtChat.text,
                             recevier: chatController.receiverEmail.value,
                             sender: AuthService.authService.getUser()!.email,
-                            time: Timestamp.now());
+                            time: Timestamp.now(),
+
+                        );
                         chatController.txtChat.clear();
                         await UserFirestore.userFirestore
                             .addChatIntoFirestore(chat);
