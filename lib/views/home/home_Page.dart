@@ -55,6 +55,10 @@ class HomePage extends StatelessWidget {
               icon: const Icon(Icons.notification_add)),
           IconButton(
               onPressed: () async {
+              },
+              icon: const Icon(Icons.schedule)),
+          IconButton(
+              onPressed: () async {
                 await AuthService.authService.logoutUser();
                 await GoogleAuth.googleAuth.signOutFromGoogle();
                 User? user = AuthService.authService.getUser();

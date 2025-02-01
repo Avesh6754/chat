@@ -98,33 +98,38 @@ class ChatPage extends StatelessWidget {
                           },
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: Container(
-                              alignment: chatList[index].sender ==
-                                      AuthService.authService.getUser()!.email
-                                  ? Alignment.centerRight
-                                  : Alignment.centerLeft,
-                              child: Container(
-                                // color: Colors.green.shade100,
-                                decoration: BoxDecoration(
-                                    color: chatList[index].sender ==
-                                            AuthService.authService
-                                                .getUser()!
-                                                .email
-                                        ? Colors.green.shade100
-                                        : Colors.grey.shade300,
-                                    borderRadius: BorderRadius.circular(10)),
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 8, horizontal: 20),
-                                  child: Column(
-                                    children: [
-                                      Text(chatList[index].message!,style: TextStyle(fontSize: 15),),
-                                      Text(chatController.dateFormate(chatList[index].time!),style: TextStyle(fontSize: 10,color: Colors.grey.shade700),),
-                                    ],
+                            child: Column(
+                              children: [
+                                Container(
+                                  alignment: chatList[index].sender ==
+                                          AuthService.authService.getUser()!.email
+                                      ? Alignment.centerRight
+                                      : Alignment.centerLeft,
+                                  child: Container(
+                                    // color: Colors.green.shade100,
+                                    decoration: BoxDecoration(
+                                        color: chatList[index].sender ==
+                                                AuthService.authService
+                                                    .getUser()!
+                                                    .email
+                                            ? Colors.green.shade100
+                                            : Colors.grey.shade300,
+                                        borderRadius: BorderRadius.circular(10)),
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 8, horizontal: 20),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.end,
+                                        children: [
+                                          Text(chatList[index].message!,style: const TextStyle(fontSize: 16,fontWeight: FontWeight.w500),),
+                                          Text(chatController.dateFormate(chatList[index].time!,),style: TextStyle(fontSize: 12,color: Colors.grey.shade700,fontWeight: FontWeight.w500),),
+                                        ],
+                                      ),
+                                    ),
+                                    // subtitle: Text(chatList[index].time!.toString()),
                                   ),
                                 ),
-                                // subtitle: Text(chatList[index].time!.toString()),
-                              ),
+                              ],
                             ),
                           ),
                         ),
