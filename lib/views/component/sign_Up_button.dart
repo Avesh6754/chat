@@ -29,7 +29,8 @@ class Sign_Up_Button extends StatelessWidget {
           controller.txtEmail.clear();
           controller.txtPhone.clear();
           controller.txtName.clear();
-          Get.back();
+          Navigator.of(context).pop();
+
         }
       },
       style: ElevatedButton.styleFrom(
