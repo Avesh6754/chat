@@ -27,13 +27,15 @@ class UserFirestore {
     print(
         "=========================================${user.name} ======================${user.phone} =============================${user.profileImage}=====================${user.isTyping}=======================${user.isOnline}");
   }
-Future<void> updateProfilePhoto({required String url,userEmail })
-async {
-  await _firestore
-      .collection("users")
-      .doc(userEmail)
-      .update({'profileImage':url});
-}
+
+  Future<void> updateProfilePhoto({required String url, userEmail}) async {
+    await _firestore
+        .collection("users")
+        .doc(userEmail)
+        .update({'profileImage': url});
+    print("======================Image============$url");
+  }
+
   Future<void> editStatus(
       {required String email,
       required bool online,
@@ -41,20 +43,59 @@ async {
     await _firestore
         .collection("users")
         .doc(email)
-        .update({'isOnline': online, 'isTyping': typing});
+        .update({'isOnline': online,});
   }
 
-  Stream<DocumentSnapshot<Map<String, dynamic>>> getCurrentUserAndShow()  {
+  Future<UserModal> getCurrentUserAndShow() async {
     User? user = AuthService.authService.getUser();
-    return  _firestore.collection("users").doc(user!.email).snapshots();
+    DocumentSnapshot snapshot =
+        await _firestore.collection("users").doc(user!.email).get();
+    final data = snapshot.data() as Map<String, dynamic>?;
+    UserModal userModal = UserModal.fromMap(data!);
+    return userModal;
+  }
+  Future<Map<String, dynamic>?> fetchReceiverData(String text)
+  async {
+    DocumentSnapshot<Map<String, dynamic>> snapshot =
+    await
+    _firestore.collection('users')
+        .doc(text)
+    .get();
+    final data = snapshot.data();
+    return data;
   }
 
-  Future<QuerySnapshot<Map<String, dynamic>>> readAllUserFromFirestore() async {
+  Stream<QuerySnapshot<Map<String, dynamic>>> readAllUserFromFirestore()  {
     User? user = AuthService.authService.getUser();
-    return await _firestore
+    return  _firestore
         .collection("users")
         .where("email", isNotEqualTo: user!.email)
-        .get();
+        .snapshots();
+  }
+  Stream<String> getProfileImage(String text)
+  {
+    User? user = AuthService.authService.getUser();
+    return  _firestore
+        .collection("users").doc(text).snapshots().map((event) => event.data()!['profileImage'],);
+  }
+  Stream<DocumentSnapshot<Map<String, dynamic>>> isActive(String text)
+  {
+    return  _firestore
+        .collection("users").doc(text).snapshots();
+  }
+  Future<void> updateUserName(String name)
+  async {
+    User? user = AuthService.authService.getUser();
+    await _firestore
+        .collection("users")
+        .doc(user!.email)
+        .update({'name':name});
+  }
+  Stream<DocumentSnapshot<Map<String, dynamic>>> getSatuts(String text)
+  {
+   return _firestore.collection('users')
+        .doc(text)
+        .snapshots();
   }
 
   // add chat in fire store
@@ -116,4 +157,5 @@ async {
         .delete()
         .then((value) => Get.snackbar('Message Deleted !', ''));
   }
+
 }

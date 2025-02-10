@@ -25,16 +25,5 @@ class AuthController extends GetxController {
     isHidden.value = !value;
   }
 
-  Future<void> sendImageToServer(UserModal user) async {
-    ImagePicker imagePicker = ImagePicker();
-    XFile? xFile = await imagePicker.pickImage(source: ImageSource.gallery);
-    Uint8List image = await xFile!.readAsBytes();
-    final url =
-        await ApiHelper.apiHelper.uploadImage(image) ?? profilePicture.value;
 
-    debugPrint("image ${user.profileImage}");
-    defaultImage.value = user.profileImage!;
-    await UserFirestore.userFirestore
-        .updateProfilePhoto(url: url, userEmail: user.email);
-  }
 }

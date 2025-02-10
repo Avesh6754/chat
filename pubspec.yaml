@@ -50,6 +50,9 @@ dependencies:
   flutter_animate: ^4.5.0
   smooth_page_indicator: ^1.1.0
   animations: ^2.0.7
+  image_picker: ^1.1.2
+  shared_preferences: any
+  cached_network_image: ^3.4.1
 
 
 

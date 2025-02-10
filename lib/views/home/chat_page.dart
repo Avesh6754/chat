@@ -44,45 +44,82 @@ class _ChatPageState extends State<ChatPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      appBar: AppBar(
-        leading: IconButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            icon: Icon(
-              Icons.arrow_back,
-              color: Colors.white,
-            )),
-        backgroundColor: Colors.grey[900],
-        title: ListTile(
-          leading: Obx(
-            () => Container(
-              decoration: BoxDecoration(
-                  color: (chatController.isOnline.value) ? Colors.green : null,
-                  shape: BoxShape.circle),
-              child: CircleAvatar(
-                backgroundImage: (chatController.imageUrl.value.isEmpty)
-                    ? const NetworkImage(
-                        'https://cdn-icons-png.flaticon.com/512/3135/3135715.png')
-                    : NetworkImage(chatController.imageUrl.value),
-              ),
-            ),
-          ),
-          title: Text(
-            chatController.receiverName.value,
-            style: TextStyle(color: Colors.white),
-          ),
-          subtitle: (!chatController.isOnline.value)
-              ? Text(
-                  DateTime.now().toString(),
-                  style: TextStyle(color: Colors.white70),
-                )
-              : Text(
-                  'Online',
-                  style: TextStyle(color: Colors.green),
-                ),
-        ),
-      ),
+      // appBar: AppBar(
+      //   centerTitle: true,
+      //   toolbarHeight: 86,
+      //   backgroundColor: Colors.transparent,
+      //   bottom: const PreferredSize(
+      //       preferredSize: Size.fromHeight(10),
+      //       child: Divider(
+      //         height: 0,
+      //         thickness: 0.2,
+      //       )),
+      //   title: Column(
+      //     mainAxisSize: MainAxisSize.min,
+      //     children: [
+      //       // PROFILE PHOTO
+      //       CircleAvatar(
+      //         backgroundColor: Colors.grey,
+      //         backgroundImage: chatController.recevier!.profileImage != null
+      //             ? NetworkImage(chatController.recevier!.profileImage!)
+      //             : null,
+      //         child: chatController.recevier!.profileImage == null
+      //             ? const Icon(
+      //           Icons.person,
+      //           color: Colors.white,
+      //         )
+      //             : const SizedBox(),
+      //       ),
+      //
+      //       const SizedBox(
+      //         height: 4,
+      //       ),
+      //
+      //       // NAME
+      //       Text(
+      //         chatController.recevier!.name?? "No name",
+      //
+      //       ),
+      //
+      //       // ONLINE STATUS
+      //       StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+      //           stream: UserFirestore.userFirestore.isActive(chatController.recevier!.email!),
+      //           builder: (context, snapshot) {
+      //
+      //             if(snapshot.hasError){
+      //               return Text(snapshot.error.toString());
+      //             } else if (snapshot.connectionState == ConnectionState.waiting){
+      //               return Row(
+      //                 mainAxisSize: MainAxisSize.min,
+      //                 children: [
+      //                   Text(
+      //                     "Offline",
+      //                   ),
+      //                 ],
+      //               );
+      //             } else if (snapshot.hasData){
+      //               final status = snapshot.data!.data()!['isActive'];
+      //               return Row(
+      //                 mainAxisSize: MainAxisSize.min,
+      //                 children: [
+      //                   Text(
+      //                     status ? "Online" : "Offline",
+      //                     style: Theme.of(context)
+      //                         .textTheme
+      //                         .bodyMedium!
+      //                         .copyWith(color: status ? Colors.green : Colors.grey),
+      //                   ),
+      //                 ],
+      //               );
+      //             }
+      //
+      //             return const SizedBox();
+      //           }
+      //       ),
+      //
+      //     ],
+      //   ),
+      // ),
       body: Padding(
         padding: const EdgeInsets.all(12),
         child: Column(
