@@ -1,6 +1,7 @@
 import 'package:chat_application/controller/auth_controller.dart';
 import 'package:chat_application/service/auth_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
 
 import '../component/sign_Up_button.dart';
@@ -13,7 +14,7 @@ class SignUp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[200],
+      backgroundColor: Colors.black,
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
         child: Center(
@@ -21,45 +22,57 @@ class SignUp extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const Text(
-                  'Sign Up',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      fontSize: 32,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 1,
-                      height: 4),
+                Hero(
+                  tag: "logo",
+                  child: const Icon(Icons.chat, size: 80, color: Colors.purple)
+                      .animate()
+                      .scale(delay: 200.ms, duration: 600.ms),
                 ),
                 const SizedBox(height: 20),
                 TextField(
                   controller: controller.txtName,
+                  style: const TextStyle(color: Colors.white),
                   decoration: InputDecoration(
-                    labelText: 'Name',
-                    hintText: 'Enter your Name',
+                    prefixIcon: const Icon(Icons.person, color: Colors.purple),
+                    hintText: "Name",
+                    hintStyle: const TextStyle(color: Colors.white70),
+                    filled: true,
+                    fillColor: Colors.grey[900],
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(30),
+                      borderSide: BorderSide.none,
                     ),
                   ),
                 ),
                 const SizedBox(height: 20),
                 TextField(
                   controller: controller.txtPhone,
+                  style: const TextStyle(color: Colors.white),
                   decoration: InputDecoration(
-                    labelText: 'Phone',
-                    hintText: 'Enter your Phone',
+                    prefixIcon: const Icon(Icons.phone, color: Colors.purple),
+                    hintText: "Phone",
+                    hintStyle: const TextStyle(color: Colors.white70),
+                    filled: true,
+                    fillColor: Colors.grey[900],
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(30),
+                      borderSide: BorderSide.none,
                     ),
                   ),
                 ),
                 const SizedBox(height: 20),
                 TextField(
                   controller: controller.txtEmail,
+                  style: const TextStyle(color: Colors.white),
                   decoration: InputDecoration(
-                    labelText: 'E-mail',
-                    hintText: 'Enter your email',
+                    prefixIcon: const Icon(Icons.email, color: Colors.purple),
+                    hintText: "Email",
+                    hintStyle: const TextStyle(color: Colors.white70),
+                    filled: true,
+                    fillColor: Colors.grey[900],
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(30),
+                      borderSide: BorderSide.none,
                     ),
                   ),
                 ),
@@ -68,20 +81,28 @@ class SignUp extends StatelessWidget {
                   () => TextField(
                     controller: controller.txtPassword,
                     obscureText: controller.isHidden.value,
+                    style: const TextStyle(color: Colors.white),
                     decoration: InputDecoration(
-                      labelText: 'Password',
-                      hintText: 'Enter your password',
+                      prefixIcon: const Icon(Icons.lock, color: Colors.purple),
+                      hintText: "Password",
+                      hintStyle: const TextStyle(color: Colors.white70),
+                      filled: true,
+                      fillColor: Colors.grey[900],
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(30),
+                        borderSide: BorderSide.none,
                       ),
                       suffixIcon: IconButton(
-                          onPressed: () {
-                            controller
-                                .hideThePassword(controller.isHidden.value);
-                          },
-                          icon: (controller.isHidden.value == false)
-                              ? Icon(Icons.visibility)
-                              : Icon(Icons.visibility_off)),
+                        icon: Icon(
+                          controller.isHidden.value
+                              ? Icons.visibility_off
+                              : Icons.visibility,
+                          color: Colors.white70,
+                        ),
+                        onPressed: () {
+                          controller.hideThePassword(controller.isHidden.value);
+                        },
+                      ),
                     ),
                   ),
                 ),

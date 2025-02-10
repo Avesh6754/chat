@@ -1,6 +1,7 @@
 import 'package:chat_application/firebase_options.dart';
 import 'package:chat_application/service/auth_service.dart';
 import 'package:chat_application/service/local_notification.dart';
+import 'package:chat_application/service/user_firestore.dart';
 import 'package:chat_application/views/component/auth_Manager.dart';
 import 'package:chat_application/views/home/chat_page.dart';
 import 'package:chat_application/views/home/home_Page.dart';
@@ -14,10 +15,10 @@ import 'package:get/get.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  // await UserFirestore.userFirestore.readAllUserFromFirestore();
 
   runApp(MyApp());
 }
-
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -37,8 +38,9 @@ class MyApp extends StatelessWidget {
         ),
         GetPage(
           name: '/signIn',
-          page: () => const SignIn(),
+          page: () =>  SignIn(),
         ),
+
         GetPage(
           name: '/signUp',
           page: () => const SignUp(),

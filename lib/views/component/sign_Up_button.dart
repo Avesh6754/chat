@@ -19,31 +19,30 @@ class Sign_Up_Button extends StatelessWidget {
             .createAccountWithEmailAndPassword(
                 controller.txtEmail.text, controller.txtPassword.text);
         UserModal userModal = UserModal(
+            profileImage:
+                'https://cdn-icons-png.flaticon.com/512/3135/3135715.png',
+            isOnline: false,
+            isTyping: false,
             email: controller.txtEmail.text,
             phone: controller.txtPhone.text,
             name: controller.txtName.text);
         if (response == 'Successfully') {
-
           await UserFirestore.userFirestore.addUser(userModal);
+
           controller.txtPassword.clear();
           controller.txtEmail.clear();
           controller.txtPhone.clear();
           controller.txtName.clear();
           Navigator.of(context).pop();
-
         }
       },
       style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.green,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30),
-        ),
-        padding: const EdgeInsets.symmetric(vertical: 15),
+        backgroundColor: Colors.purple,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+        padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 80),
       ),
-      child: const Text(
-        'Sign Up',
-        style: TextStyle(fontSize: 16, color: Colors.white, letterSpacing: 1),
-      ),
+      child: const Text("Sign Up",
+          style: TextStyle(fontSize: 18, color: Colors.white)),
     );
   }
 }
