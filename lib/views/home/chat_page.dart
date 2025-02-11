@@ -250,6 +250,7 @@ class _ChatPageState extends State<ChatPage> {
                               child: Container(
                                 decoration: BoxDecoration(
                                     color: chatList[index].sender ==
+
                                             AuthService.authService
                                                 .getUser()!
                                                 .email
