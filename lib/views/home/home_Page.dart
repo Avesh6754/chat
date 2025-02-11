@@ -101,6 +101,7 @@ class _HomePageState extends State<HomePage> {
                                 : null,
                             shape: BoxShape.circle),
                         child: Padding(
+
                           padding: const EdgeInsets.all(3),
                           child: CircleAvatar(
                             backgroundImage: (userList[index].profileImage !=
