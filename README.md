@@ -54,6 +54,10 @@ lib/
    flutter pub get
    ```
 
+
+
+
+
 3. **Set up Firebase**  
    - Create a Firebase project at [Firebase Console](https://console.firebase.google.com/).  
    - Enable **Authentication** (Email/Password).  
@@ -86,4 +90,4 @@ Let me know if you need any modifications! 😊
 </p>
 
 
-
+https://github.com/user-attachments/assets/ead696ac-16fb-4e3e-8fdc-476fce1e97b1
