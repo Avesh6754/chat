@@ -12,173 +12,178 @@ class ProfileSection extends StatelessWidget {
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     UserModal user = homeController.user!;
-    return Scaffold(
-      backgroundColor: Colors.black,
-      appBar: AppBar(
-        leading: IconButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            icon: Icon(Icons.arrow_back,color: Colors.white,)),
-        backgroundColor: Colors.black,
-        title: Text(
-          'Profile Section',
-          style: TextStyle(color: Colors.white),
-        ),
-      ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          SizedBox(height: 20,),
-          GestureDetector(
-            onTap: () async {
-              Get.bottomSheet(
-                Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: Container(
-                    padding: const EdgeInsets.all(8.0),
-                    decoration:  BoxDecoration(
-                      color: Colors.grey,
-                      border: Border.symmetric(horizontal: BorderSide(color: Colors.grey.shade300,width: 0.4)),
-                      borderRadius: BorderRadius.circular(20)
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                      Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          SizedBox(height: 10,),
-                          GestureDetector(
-                            onTap: () async {
-                              await homeController.sendImageToServer(true);
-                              Get.back();
-                            },
-                            child: CircleAvatar(
-                              backgroundColor: Colors.black54,
-                              radius: height*0.030,
-                              child: Icon(Icons.camera_alt,color: Colors.blueGrey.shade300,size: height*0.025),
-
-                            ),
-                          ),
-                          SizedBox(height: 10,),
-                          Text('Camera',style: TextStyle(color: Colors.white),)
-                        ],
-                      ),
-                        Column(
-                          mainAxisSize: MainAxisSize.min,
+    print("===================profile section ========${homeController.user!.email}");
+    return GetBuilder<HomeController>(
+      builder: (controller) {
+        UserModal? user = controller.user;
+        return      Scaffold(
+          backgroundColor: Colors.black,
+          appBar: AppBar(
+            leading: IconButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                icon: Icon(Icons.arrow_back,color: Colors.white,)),
+            backgroundColor: Colors.black,
+            title: Text(
+              'Profile Section',
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+          body: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              SizedBox(height: 20,),
+              GestureDetector(
+                onTap: () async {
+                  Get.bottomSheet(
+                    Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: Container(
+                        padding: const EdgeInsets.all(8.0),
+                        decoration:  BoxDecoration(
+                            color: Colors.grey,
+                            border: Border.symmetric(horizontal: BorderSide(color: Colors.grey.shade300,width: 0.4)),
+                            borderRadius: BorderRadius.circular(20)
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            SizedBox(height: 10,),
-                            GestureDetector(
-                              onTap: () async {
-                                await homeController.sendImageToServer(false);
-                                Get.back();
-                              },
-                              child: CircleAvatar(
-                                backgroundColor: Colors.black54,
-                                radius: height*0.030,
-                                child: Icon(Icons.photo_outlined,color: Colors.green.shade300,size: height*0.025,),
-                              ),
+                            Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                SizedBox(height: 10,),
+                                GestureDetector(
+                                  onTap: () async {
+                                    await homeController.sendImageToServer(true);
+                                    Get.back();
+                                  },
+                                  child: CircleAvatar(
+                                    backgroundColor: Colors.black54,
+                                    radius: height*0.030,
+                                    child: Icon(Icons.camera_alt,color: Colors.blueGrey.shade300,size: height*0.025),
+
+                                  ),
+                                ),
+                                SizedBox(height: 10,),
+                                Text('Camera',style: TextStyle(color: Colors.white),)
+                              ],
                             ),
-                            SizedBox(height: 10,),
-                            Text('Gallery',style: TextStyle(color: Colors.white),)
+                            Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                SizedBox(height: 10,),
+                                GestureDetector(
+                                  onTap: () async {
+                                    await homeController.sendImageToServer(false);
+                                    Get.back();
+                                  },
+                                  child: CircleAvatar(
+                                    backgroundColor: Colors.black54,
+                                    radius: height*0.030,
+                                    child: Icon(Icons.photo_outlined,color: Colors.green.shade300,size: height*0.025,),
+                                  ),
+                                ),
+                                SizedBox(height: 10,),
+                                Text('Gallery',style: TextStyle(color: Colors.white),)
+                              ],
+                            ),
                           ],
                         ),
-                      ],
-                    ),
-                  ),
-                ),
-              );
-              // await homeController.sendImageToServer();
-            },
-            child: GetBuilder<HomeController>(
-              builder: (controller) => CircleAvatar(
-                radius: height * 0.060,
-                backgroundImage: (controller.user?.profileImage != null &&
-                        controller.user!.profileImage!.isNotEmpty)
-                    ? NetworkImage(controller.user!.profileImage!)
-                    : null,
-                child: (controller.user?.profileImage == null ||
-                        controller.user!.profileImage!.isEmpty)
-                    ? Icon(Icons.person, size: 30) // Default icon if no image
-                    : null, // No child if image exists
-              ),
-            ),
-          ),
-          GestureDetector(
-            onTap: () {
-              _showUpdateNameDialog(user.name);
-            },
-            child: Container(
-              height: height * 0.070,
-              margin: const EdgeInsets.all(15),
-              decoration: BoxDecoration(
-                color: Colors.grey[900], // Same as TextField fillColor
-                borderRadius: BorderRadius.circular(30),
-              ),
-              child: Row(
-                children: [
-                  const SizedBox(width: 10),
-                  const Icon(Icons.person, color: Colors.purple),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: GetBuilder<HomeController>(
-                      builder: (controller) => Text(
-                        controller.user?.name ?? "No Name",
-                        // Show name from controller
-                        style:
-                            const TextStyle(color: Colors.white, fontSize: 16),
                       ),
                     ),
+                  );
+                  // await homeController.sendImageToServer();
+                },
+                child: GetBuilder<HomeController>(
+                  builder: (controller) => CircleAvatar(
+                    radius: height * 0.060,
+                    backgroundImage: (user!.profileImage != null && user.profileImage!.isNotEmpty)
+                        ? NetworkImage(user.profileImage!)
+                        : null,
+                    child: (user.profileImage == null || user.profileImage!.isEmpty)
+                        ? const Icon(Icons.person, size: 30, color: Colors.white)
+                        : null,
                   ),
-                  const Icon(Icons.edit, color: Colors.white70), // Edit icon
-                  const SizedBox(width: 20),
-                ],
+                ),
               ),
-            ),
-          ),
-          Container(
-            height: height * 0.070,
-            margin: const EdgeInsets.all(15),
-            decoration: BoxDecoration(
-              color: Colors.grey[900], // Same as TextField fillColor
-              borderRadius: BorderRadius.circular(30),
-            ),
-            child: Row(
-              children: [
-                const SizedBox(width: 10),
-                const Icon(Icons.mail, color: Colors.purple),
-                const SizedBox(width: 10),
-                Text(
-                  '${user.email}', // Show name from controller
-                  style: const TextStyle(color: Colors.white, fontSize: 16),
+              GestureDetector(
+                onTap: () {
+                  _showUpdateNameDialog(user!.name);
+                },
+                child: Container(
+                  height: height * 0.070,
+                  margin: const EdgeInsets.all(15),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[900], // Same as TextField fillColor
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  child: Row(
+                    children: [
+                      const SizedBox(width: 10),
+                      const Icon(Icons.person, color: Colors.purple),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: GetBuilder<HomeController>(
+                          builder: (controller) => Text(
+                            controller.user?.name ?? "No Name",
+                            // Show name from controller
+                            style:
+                            const TextStyle(color: Colors.white, fontSize: 16),
+                          ),
+                        ),
+                      ),
+                      const Icon(Icons.edit, color: Colors.white70), // Edit icon
+                      const SizedBox(width: 20),
+                    ],
+                  ),
                 ),
-              ],
-            ),
-          ),
-          Container(
-            height: height * 0.070,
-            margin: const EdgeInsets.all(15),
-            decoration: BoxDecoration(
-              color: Colors.grey[900], // Same as TextField fillColor
-              borderRadius: BorderRadius.circular(30),
-            ),
-            child: Row(
-              children: [
-                const SizedBox(width: 10),
-                const Icon(Icons.phone, color: Colors.purple),
-                const SizedBox(width: 10),
-                Text(
-                  '${user.phone}', // Show name from controller
-                  style: const TextStyle(color: Colors.white, fontSize: 16),
+              ),
+              Container(
+                height: height * 0.070,
+                margin: const EdgeInsets.all(15),
+                decoration: BoxDecoration(
+                  color: Colors.grey[900], // Same as TextField fillColor
+                  borderRadius: BorderRadius.circular(30),
                 ),
-              ],
-            ),
-          ),
+                child: Row(
+                  children: [
+                    const SizedBox(width: 10),
+                    const Icon(Icons.mail, color: Colors.purple),
+                    const SizedBox(width: 10),
+                    Text(
+                      '${user!.email}', // Show name from controller
+                      style: const TextStyle(color: Colors.white, fontSize: 16),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                height: height * 0.070,
+                margin: const EdgeInsets.all(15),
+                decoration: BoxDecoration(
+                  color: Colors.grey[900], // Same as TextField fillColor
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                child: Row(
+                  children: [
+                    const SizedBox(width: 10),
+                    const Icon(Icons.phone, color: Colors.purple),
+                    const SizedBox(width: 10),
+                    Text(
+                      '${user!.phone}', // Show name from controller
+                      style: const TextStyle(color: Colors.white, fontSize: 16),
+                    ),
+                  ],
+                ),
+              ),
 
-          // Function to Show Update Name
-        ],
-      ),
+              // Function to Show Update Name
+            ],
+          ),
+        );
+      },
+
     );
   }
 }
