@@ -313,3 +313,87 @@ class _ChatPageState extends State<ChatPage> {
     );
   }
 }
+
+
+
+
+
+
+onLongPress: () async {
+  if (chatList[index].sender == AuthService.authService.getUser()!.email) {
+    if (chatList[index].isImage!) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('Update Image'),
+            content: const Text('Do you want to update this image?'),
+            actions: [
+              TextButton(
+                onPressed: () async {
+                  String updateId = docIdList[index];
+
+                  // Select new image
+                  String? newImageUrl = await chatController.pickAndUploadImage();
+                  if (newImageUrl != null) {
+                    // Update Firestore with new image URL
+                    UserFirestore.userFirestore.updateMessage(
+                      recevier: chatController.receiverEmail.value,
+                      message: newImageUrl,
+                      updateId: updateId,
+                      isImage: true,
+                    );
+                  }
+                  Get.back();
+                },
+                child: const Text('Update'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Get.back();
+                },
+                child: const Text('Cancel'),
+              ),
+            ],
+          );
+        },
+      );
+    } else {
+      // Text update logic remains the same
+      chatController.lastmessage.value = chatList[index].message!;
+      chatController.txtUpdateChat = TextEditingController(text: chatList[index].message);
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('Update'),
+            content: TextField(
+              controller: chatController.txtUpdateChat,
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  String updateId = docIdList[index];
+                  UserFirestore.userFirestore.updateMessage(
+                    recevier: chatController.receiverEmail.value,
+                    message: chatController.txtUpdateChat.text,
+                    updateId: updateId,
+                    isImage: false,
+                  );
+                  Get.back();
+                },
+                child: const Text('Update'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Get.back();
+                },
+                child: const Text('Cancel'),
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
+},
