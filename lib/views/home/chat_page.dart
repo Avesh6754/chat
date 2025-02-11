@@ -44,82 +44,78 @@ class _ChatPageState extends State<ChatPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      // appBar: AppBar(
-      //   centerTitle: true,
-      //   toolbarHeight: 86,
-      //   backgroundColor: Colors.transparent,
-      //   bottom: const PreferredSize(
-      //       preferredSize: Size.fromHeight(10),
-      //       child: Divider(
-      //         height: 0,
-      //         thickness: 0.2,
-      //       )),
-      //   title: Column(
-      //     mainAxisSize: MainAxisSize.min,
-      //     children: [
-      //       // PROFILE PHOTO
-      //       CircleAvatar(
-      //         backgroundColor: Colors.grey,
-      //         backgroundImage: chatController.recevier!.profileImage != null
-      //             ? NetworkImage(chatController.recevier!.profileImage!)
-      //             : null,
-      //         child: chatController.recevier!.profileImage == null
-      //             ? const Icon(
-      //           Icons.person,
-      //           color: Colors.white,
-      //         )
-      //             : const SizedBox(),
-      //       ),
-      //
-      //       const SizedBox(
-      //         height: 4,
-      //       ),
-      //
-      //       // NAME
-      //       Text(
-      //         chatController.recevier!.name?? "No name",
-      //
-      //       ),
-      //
-      //       // ONLINE STATUS
-      //       StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
-      //           stream: UserFirestore.userFirestore.isActive(chatController.recevier!.email!),
-      //           builder: (context, snapshot) {
-      //
-      //             if(snapshot.hasError){
-      //               return Text(snapshot.error.toString());
-      //             } else if (snapshot.connectionState == ConnectionState.waiting){
-      //               return Row(
-      //                 mainAxisSize: MainAxisSize.min,
-      //                 children: [
-      //                   Text(
-      //                     "Offline",
-      //                   ),
-      //                 ],
-      //               );
-      //             } else if (snapshot.hasData){
-      //               final status = snapshot.data!.data()!['isActive'];
-      //               return Row(
-      //                 mainAxisSize: MainAxisSize.min,
-      //                 children: [
-      //                   Text(
-      //                     status ? "Online" : "Offline",
-      //                     style: Theme.of(context)
-      //                         .textTheme
-      //                         .bodyMedium!
-      //                         .copyWith(color: status ? Colors.green : Colors.grey),
-      //                   ),
-      //                 ],
-      //               );
-      //             }
-      //
-      //             return const SizedBox();
-      //           }
-      //       ),
-      //
-      //     ],
-      //   ),
-      // ),
+      appBar: AppBar(
+        leading: IconButton(onPressed: () {
+          Navigator.of(context).pop();
+        }, icon: Icon(Icons.arrow_back,color: Colors.white,)),
+        centerTitle: true,
+        toolbarHeight:100,
+        backgroundColor: Colors.transparent,
+        title: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // PROFILE PHOTO
+            SizedBox(height: 20,),
+            CircleAvatar(
+              backgroundColor: Colors.grey,
+              backgroundImage: chatController.imageUrl.value.isNotEmpty
+                  ? NetworkImage(chatController.imageUrl.value)
+                  : null,
+              child: chatController.imageUrl.value.isEmpty
+                  ? const Icon(
+                Icons.person,
+                color: Colors.white,
+              )
+                  : const SizedBox(),
+            ),
+
+            const SizedBox(
+              height: 4,
+            ),
+
+            // NAME
+            Text(
+              chatController.receiverName.value,
+              style: TextStyle(color: Colors.white,fontSize: 15),
+
+            ),
+
+            // ONLINE STATUS
+            StreamBuilder<bool>(
+                stream: UserFirestore.userFirestore.isActive(chatController.receiverEmail.value),
+                builder: (context, snapshot) {
+
+                  if(snapshot.hasError){
+                    return Text(snapshot.error.toString(),style: TextStyle(color: Colors.white,fontSize: 15),);
+                  } else if (snapshot.connectionState == ConnectionState.waiting){
+                    return const Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Offline",
+                        ),
+                      ],
+                    );
+                  } else if (snapshot.hasData){
+                    var status = snapshot.data!;
+                    print('===========================================$status');
+                    return Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        (status)?Text('Online',style: TextStyle(color: Colors.green,fontSize: 13),):Text('Offline',style: TextStyle(color: Colors.green,fontSize: 13),)
+                      ],
+                    );
+                  }
+
+                  return const SizedBox();
+                }
+            ),
+
+          ],
+        ),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(12),
         child: Column(
@@ -155,47 +151,87 @@ class _ChatPageState extends State<ChatPage> {
 
                         chatList.length,
                         (index) => GestureDetector(
-                          onLongPress: () {
-                            if (chatList[index].sender ==
-                                AuthService.authService.getUser()!.email) {
-                              chatController.lastmessage.value =
-                                  chatList[index].message!;
-                              chatController.txtUpdateChat =
-                                  TextEditingController(
-                                      text: chatList[index].message);
-                              showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return AlertDialog(
-                                    title: const Text('Update'),
-                                    content: TextField(
-                                      controller: chatController.txtUpdateChat,
-                                    ),
-                                    actions: [
-                                      TextButton(
+                          onLongPress: () async {
+                            if (chatList[index].sender == AuthService.authService.getUser()!.email) {
+                              if (chatList[index].isImage!) {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(backgroundColor: Colors.black,
+                                      title: const Text('Update Image',style: TextStyle(color: Colors.white),),
+                                      content: const Text('Do you want to update this image?',style: TextStyle(color: Colors.white),),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () async {
+                                            String updateId = docIdList[index];
+
+                                            // Select new image
+                                            String? newImageUrl = await chatController.sendImageToServer(chatList[index]);
+                                            if (newImageUrl != null) {
+                                              // Update Firestore with new image URL
+                                              UserFirestore.userFirestore.updateMessage(
+                                                recevier: chatController.receiverEmail.value,
+                                                message: newImageUrl,
+                                                updateId: updateId,
+                                                isImage: true,
+                                              );
+                                            }
+                                            Get.back();
+                                          },
+                                          child: const Text('Update'),
+                                        ),
+                                        TextButton(
+                                          onPressed: () {
+                                            Get.back();
+                                          },
+                                          child: const Text('Cancel'),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              } else {
+                                // Text update logic remains the same
+                                chatController.lastmessage.value = chatList[index].message!;
+                                chatController.txtUpdateChat = TextEditingController(text: chatList[index].message);
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      title: const Text('Update',style: TextStyle(color: Colors.white),),
+                                      backgroundColor: Colors.black,
+                                      content: TextField(
+                                        style: TextStyle(color: Colors.white),
+                                        controller: chatController.txtUpdateChat,
+                                      ),
+                                      actions: [
+                                        TextButton(
                                           onPressed: () {
                                             String updateId = docIdList[index];
-                                            UserFirestore.userFirestore
-                                                .updateMessage(
-                                                    recevier: chatController
-                                                        .receiverEmail.value,
-                                                    message: chatController
-                                                        .txtUpdateChat.text,
-                                                    updateId: updateId);
+                                            UserFirestore.userFirestore.updateMessage(
+                                              recevier: chatController.receiverEmail.value,
+                                              message: chatController.txtUpdateChat.text,
+                                              updateId: updateId,
+                                              isImage: false,
+                                            );
                                             Get.back();
                                           },
-                                          child: const Text('Update')),
-                                      TextButton(
+                                          child: const Text('Update'),
+                                        ),
+                                        TextButton(
                                           onPressed: () {
                                             Get.back();
                                           },
-                                          child: const Text('Cancel'))
-                                    ],
-                                  );
-                                },
-                              );
+                                          child: const Text('Cancel'),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              }
                             }
                           },
+
                           onDoubleTap: () {
                             if (chatList[index].sender ==
                                 AuthService.authService.getUser()!.email) {
@@ -319,81 +355,3 @@ class _ChatPageState extends State<ChatPage> {
 
 
 
-onLongPress: () async {
-  if (chatList[index].sender == AuthService.authService.getUser()!.email) {
-    if (chatList[index].isImage!) {
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: const Text('Update Image'),
-            content: const Text('Do you want to update this image?'),
-            actions: [
-              TextButton(
-                onPressed: () async {
-                  String updateId = docIdList[index];
-
-                  // Select new image
-                  String? newImageUrl = await chatController.pickAndUploadImage();
-                  if (newImageUrl != null) {
-                    // Update Firestore with new image URL
-                    UserFirestore.userFirestore.updateMessage(
-                      recevier: chatController.receiverEmail.value,
-                      message: newImageUrl,
-                      updateId: updateId,
-                      isImage: true,
-                    );
-                  }
-                  Get.back();
-                },
-                child: const Text('Update'),
-              ),
-              TextButton(
-                onPressed: () {
-                  Get.back();
-                },
-                child: const Text('Cancel'),
-              ),
-            ],
-          );
-        },
-      );
-    } else {
-      // Text update logic remains the same
-      chatController.lastmessage.value = chatList[index].message!;
-      chatController.txtUpdateChat = TextEditingController(text: chatList[index].message);
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: const Text('Update'),
-            content: TextField(
-              controller: chatController.txtUpdateChat,
-            ),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  String updateId = docIdList[index];
-                  UserFirestore.userFirestore.updateMessage(
-                    recevier: chatController.receiverEmail.value,
-                    message: chatController.txtUpdateChat.text,
-                    updateId: updateId,
-                    isImage: false,
-                  );
-                  Get.back();
-                },
-                child: const Text('Update'),
-              ),
-              TextButton(
-                onPressed: () {
-                  Get.back();
-                },
-                child: const Text('Cancel'),
-              ),
-            ],
-          );
-        },
-      );
-    }
-  }
-},

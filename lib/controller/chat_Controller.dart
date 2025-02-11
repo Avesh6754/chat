@@ -41,13 +41,14 @@ class ChatController extends GetxController {
     return formatedate.value;
   }
 
-  Future<void> sendImageToServer(ChatModal chat) async {
+  Future<String?> sendImageToServer(ChatModal chat) async {
     ImagePicker imagePicker = ImagePicker();
     XFile? xFile = await imagePicker.pickImage(source: ImageSource.gallery);
     Uint8List image = await xFile!.readAsBytes();
     chat.message = await ApiHelper.apiHelper.uploadImage(image) ?? "";
 
     await UserFirestore.userFirestore.addChatIntoFirestore(chat);
+    return chat.message;
   }
 
   void getReceiver(String email, String name, String image, bool online,

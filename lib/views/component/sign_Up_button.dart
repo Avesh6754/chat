@@ -20,7 +20,7 @@ class Sign_Up_Button extends StatelessWidget {
                 controller.txtEmail.text, controller.txtPassword.text);
         UserModal userModal = UserModal(
             profileImage:
-                'https://cdn-icons-png.flaticon.com/512/3135/3135715.png',
+                '',
             isOnline: false,
             isTyping: false,
             email: controller.txtEmail.text,

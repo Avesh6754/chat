@@ -69,7 +69,7 @@ class UserFirestore {
     User? user = AuthService.authService.getUser();
     return  _firestore
         .collection("users")
-        .where("email", isNotEqualTo: user!.email)
+        .where("email",isNotEqualTo: user!.email)
         .snapshots();
   }
   Stream<String> getProfileImage(String text)
@@ -78,10 +78,10 @@ class UserFirestore {
     return  _firestore
         .collection("users").doc(text).snapshots().map((event) => event.data()!['profileImage'],);
   }
-  Stream<DocumentSnapshot<Map<String, dynamic>>> isActive(String text)
+  Stream<bool> isActive(String text)
   {
     return  _firestore
-        .collection("users").doc(text).snapshots();
+        .collection("users").doc(text).snapshots().map((event) => event.data()!['isOnline'],);
   }
   Future<void> updateUserName(String name)
   async {
@@ -91,12 +91,7 @@ class UserFirestore {
         .doc(user!.email)
         .update({'name':name});
   }
-  Stream<DocumentSnapshot<Map<String, dynamic>>> getSatuts(String text)
-  {
-   return _firestore.collection('users')
-        .doc(text)
-        .snapshots();
-  }
+  // }
 
   // add chat in fire store
 // chatroom->
@@ -130,7 +125,7 @@ class UserFirestore {
   Future<void> updateMessage(
       {required String recevier,
       required String message,
-      required String updateId}) async {
+      required String updateId,required bool isImage}) async {
     String sender = AuthService.authService.getUser()!.email!;
     List doc = [sender, recevier];
     doc.sort();
@@ -140,7 +135,7 @@ class UserFirestore {
         .doc(docId)
         .collection("chat")
         .doc(updateId)
-        .update({'message': message});
+        .update({'message': message,'isImage':isImage});
   }
 
   Future<void> deleteMessage(

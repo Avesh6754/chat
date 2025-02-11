@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:chat_application/modal/userModal.dart';
 import 'package:chat_application/service/user_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -16,10 +17,17 @@ class HomeController extends GetxController{
 
   Future<UserModal?> getCurrentUser()
   async {
-    user=await UserFirestore.userFirestore.getCurrentUserAndShow();
-    if(user != null) homeController.txtName.text = user!.name ?? "";
-    update();
-    return user;
+   try{
+     user=await UserFirestore.userFirestore.getCurrentUserAndShow();
+     if(user != null) homeController.txtName.text = user!.name ?? "";
+     update();
+     return user;
+   }
+   catch(e)
+    {
+      return user;
+    }
+
   }
   Future<void> sendImageToServer(bool choice) async {
     ImagePicker imagePicker = ImagePicker();
